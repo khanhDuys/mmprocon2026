@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { thickness } from 'three/tsl';
-export class Sunflower {
+export class Sunflowers {
     constructor(scene) {
         this.scene = scene;
-        this.flower_count = 2000;
-        this.area_size = 25;
+        this.flower_count = 100;
+        this.area_size = 5;
 
         this.temp = new THREE.Object3D();
         this.instance_position = new THREE.Vector3();
@@ -25,6 +25,7 @@ export class Sunflower {
             if (child.isMesh&&!flower_geo) { // if is flower mesh
                 flower_mat = child.material;
                 flower_geo = child.geometry;
+                flower_geo.computeBoundingSphere();
                 flower_mat.side = THREE.DoubleSide;
                 flower_mat.transparent = true;
                 flower_mat.alphaTest = 0.5;
@@ -36,7 +37,7 @@ export class Sunflower {
               const x = this.area_size*(Math.random()-0.5);
               const z = this.area_size*(Math.random()-0.5);
               this.temp.position.set(x, 0, z);
-              const rot = (Math.random()-0.5)*Math.PI*0.5;
+              const rot = Math.random()*Math.PI*0.5;
               this.temp.rotation.y = rot;
               this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
               this.temp.updateMatrix();
@@ -59,7 +60,7 @@ export class Sunflower {
             let z = this.instance_position.z;
             let dx = x-camera.position.x;
             let dz = z-camera.position.z;
-            let shiftX = Math.round(dx / this.area_size); // if distance is > half of area size
+            let shiftX = Math.round(dx / this.area_size); // if distance is >   half of area size
             let shiftZ = Math.round(dz / this.area_size);      
             if (shiftX !== 0 || shiftZ !== 0){
               x -= shiftX * this.area_size;
@@ -76,6 +77,7 @@ export class Sunflower {
 
         if (needUpdate) {
             this.instance_sunflower.instanceMatrix.needsUpdate = true;
+            this.instance_sunflower.computeBoundingSphere();
         }
     }
 }
