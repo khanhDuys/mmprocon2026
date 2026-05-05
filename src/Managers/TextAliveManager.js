@@ -3,6 +3,8 @@ import { Player } from 'textalive-app-api';
 export class TextAliveManager {
     constructor() {
         this.isSongReady = false;
+        this.cur_char = null;
+        this.onLyricUpdate = null;
         this.player = new Player({
             app: { token: "IWXbptrqdOIVSU7K" },
         });
@@ -31,7 +33,18 @@ export class TextAliveManager {
             onTimerReady: () => {
                 this.isSongReady = true;
                 console.log("ready");
+            },
+            onTimeUpdate: (pos) => {
+                if (!this.player.video) return;
+                const newChar = this.player.video.findChar(pos);
+                if (newChar && newChar!=this.cur_char) {
+                    this.cur_char=newChar;
+                    console.log("Current Char:" + this.cur_char.text + " of text " + newChar.parent.text);
+                    if (this.onLyricUpdate) {
+                        this.onLyricUpdate(newChar.parent, this.cur_char);
+                    }
+                }
             }
-        })
+        });
     }
 }
