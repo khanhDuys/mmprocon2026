@@ -2,18 +2,23 @@ import './style.css'
 import javascriptLogo from './assets/javascript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
 
 import { SceneSetup } from './Core/SceneSetup.js';
 import { Sunflowers } from './World/Sunflowers.js';
+import { Ground } from './World/Ground.js';
+
 import { TextAliveManager } from './Managers/TextAliveManager.js'
 import { LyricManager } from './Managers/LyricManager.js'
 import { PointerLockControls } from 'three/examples/jsm/Addons.js'
 import { GLTFLoader } from 'three/examples/jsm/Addons.js'
+import Stats from 'three/addons/libs/stats.module.js'
 
 import * as THREE from 'three';
+import { compress } from 'three/examples/jsm/libs/fflate.module.js';
 
 await document.fonts.ready; // wait for mona12 font
+const stats = new Stats();
+document.body.appendChild(stats.dom);
 // Initializaton
 const core = new SceneSetup();
 const controls = new PointerLockControls(core.camera, document.body); 
@@ -27,12 +32,18 @@ document.body.addEventListener('click', () => {
     }
 });
 
-const fpsDiv = document.getElementById('fps-counter');
+//const fpsDiv = document.getElementById('fps-counter');
 
 const ambient_light = new THREE.AmbientLight(0xffffff, 2);
 core.scene.add(ambient_light);
+const spot_light = new THREE.SpotLight(0xffffff, 2);
+spot_light.castShadow = true;
+core.scene.add(spot_light);
 
-const sunflower_field = new Sunflowers(core.scene, core.camera, 1500);
+const sunflower_field = new Sunflowers(core.scene, core.camera, 5000);
+const ground = new Ground(core.scene);
+
+
 const timer = new THREE.Timer();
 
 audio.onLyricUpdate = (word, cur_char) => {
@@ -40,21 +51,38 @@ audio.onLyricUpdate = (word, cur_char) => {
     sunflower_field.placeLyric(lyric_data);
 };
 
+
+let last_update = 0; // for fps calculation
+let frame_count = 0;
 function animate(timestamp) {
   timer.update(timestamp);
   const deltaTime = timer.getDelta();
+  frame_count++;
+  stats.update(); 
 
-  sunflower_field.update(core.camera);
+  sunflower_field.update(core.camera, deltaTime);
   
+  spot_light.position.set = core.camera.position;
+  spot_light.position.z += 1;
+  spot_light.position.y += 3;
+
+
   core.camera.position.z += 5*deltaTime;
-  fpsDiv.innerText = `FPS: ${Math.round(1/deltaTime)}`; // formula for calculating fps is 1/deltatime (deltatime is in seconds)
-  core.camera.position.y = 7 + Math.sin(timestamp * 0.008) * 0.1;
-  console.log(timestamp);
+  ground.update(core.camera);
+  //fpsDiv.innerText = `FPS: ${Math.round(1/deltaTime)}`; // formula for calculating fps is 1/deltatime (deltatime is in seconds)
+  //if (timestamp>last_update+500) { // average of 500ms
+  //  //console.log((timestamp-last_update));
+  //  fpsDiv.innerText = `FPS: ${Math.round( (frame_count*1000)/(timestamp-last_update) )}`;
+  //  last_update = timestamp; frame_count = 0;
+  //}
+
+
+  core.camera.position.y = 9 + Math.sin(timestamp * 0.008) * 0.1;
   if (audio.isSongReady && !audio.player.isPlaying) {
     audio.player.requestPlay();
   }
 
-  core.renderer.render(core.scene, core.camera);
+  core.composer.render(core.scene, core.camera);
 }
 
 core.renderer.setAnimationLoop(animate);

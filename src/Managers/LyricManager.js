@@ -28,6 +28,7 @@ export class LyricManager { // for drawing lyrics on html canvases
                 polygonOffsetFactor: -10
             });
             const sprite = new THREE.Sprite(material);
+            sprite.userData.sunflower_idx = -1;
             sprite.scale.set(6, 3, 1);
             sprite.position.set(0, -9999, 0);
             this.scene.add(sprite);

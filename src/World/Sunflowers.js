@@ -7,15 +7,14 @@ export class Sunflowers {
         this.scene = scene;
         this.camera = camera;
         this.flower_count = count;
-        this.area_size = 120;
+        this.area_size = 160;
 
         this.temp = new THREE.Object3D(); // dummy for position randomizing
         this.instance_position = new THREE.Vector3();
         this.instance_sunflower = null;
         this.instance_scale = 0.1;
         // for lyric pool
-        this.pool_assigned = new Map();       
-        this.used_sunflowers = new Set();
+        this.active_lyrics = new Map();
 
         // pre-allocated math for no garbage collection
         this.temp_matrix = new THREE.Matrix4();
@@ -33,13 +32,12 @@ export class Sunflowers {
             let flower_mat = null;
         
         
-            gltf.scene.traverse((child) => { // loop through children
+            gltf.scene.traverse((child) =>   { // loop through children
             if (child.isMesh&&!flower_geo) { // if is flower mesh
                 flower_mat = child.material;
                 flower_geo = child.geometry;
                 flower_geo.computeBoundingSphere();
                 flower_mat.side = THREE.DoubleSide;
-                flower_mat.transparent = true;
                 flower_mat.alphaTest = 0.5;
                 flower_mat.depthWrite = true; // force three.js to calc depth
               }
@@ -50,10 +48,12 @@ export class Sunflowers {
               const z = this.area_size*(Math.random()-0.5);
               this.temp.position.set(x, 0, z);
               const rot = (Math.random()-0.5)*Math.PI*0.25+Math.PI;
-              this.temp.rotation.y = rot;
+              this.temp.rotation.set(0, rot, 0);
               this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
               this.temp.updateMatrix();
               this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
+              this.instance_sunflower.castShadow = true;
+              this.instance_sunflower.receiveShadow = true;
             }
             
             this.scene.add(this.instance_sunflower);
@@ -65,10 +65,10 @@ export class Sunflowers {
         let min = Infinity;
         let best = -1;
         this.offset_pos.copy(this.camera.position);
-        this.offset_pos.z+=offset; // temporary until i remove straight line
+        this.offset_pos.z+=offset; // temporary until i removex straight line
         this.camera.getWorldDirection(this.camera_direction);
         for (let i = 0; i < this.flower_count; i++) {
-            if (this.used_sunflowers.has(i)) continue;
+            if (this.active_lyrics.has(i)) continue;
 
             this.instance_sunflower.getMatrixAt(i, this.temp_matrix);
             this.temp_position.setFromMatrixPosition(this.temp_matrix);
@@ -89,14 +89,13 @@ export class Sunflowers {
         if (!this.instance_sunflower) return;
         if (isNewWord) {
             const target_id = this.getNearestSunflower(0.01*duration+1);
-            if (target_id===-1) return;
+            if (target_id === -1) return;
 
-            if (this.pool_assigned.has(pool_id)) {
-                this.used_sunflowers.delete(this.pool_assigned.get(pool_id));
+            if ((sprite.userData.sunflower_idx != 1) && (this.active_lyrics.has(sprite.userData.sunflower_idx))) {
+                this.active_lyrics.delete(sunflower_idx);
             }
-            
-            this.pool_assigned.set(pool_id, target_id);
-            this.used_sunflowers.add(target_id);
+                        
+            this.active_lyrics.set(target_id, sprite);
             // move sprites
             this.instance_sunflower.getMatrixAt(target_id, this.temp_matrix);
             sprite.position.setFromMatrixPosition(this.temp_matrix);
@@ -104,29 +103,55 @@ export class Sunflowers {
             sprite.position.z-=1;
         }
     }
-    update(camera) {
+    update(camera, deltaTime) {
         if (!this.instance_sunflower) return;
         
         let needUpdate = false;
         for (let i = 0; i<this.flower_count; i++) {
             this.instance_sunflower.getMatrixAt(i, this.temp.matrix);
             this.instance_position.setFromMatrixPosition(this.temp.matrix);
-            let x = this.instance_position.x;
-            let z = this.instance_position.z;
+            let { x, y, z } = this.instance_position;
             let dx = x-camera.position.x;
             let dz = z-camera.position.z;
             let shiftX = Math.round(dx / this.area_size); // if distance is >   half of area size
             let shiftZ = Math.round(dz / this.area_size);      
+
             if (shiftX !== 0 || shiftZ !== 0){
-              x -= shiftX * this.area_size;
-              z -= shiftZ * this.area_size;
-              this.temp.position.set(x, 0, z);
-              const rot = (Math.random()-0.5)*Math.PI*0.25+Math.PI;
-              this.temp.rotation.y = rot;
-              this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
-              this.temp.updateMatrix();
-              this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
-              needUpdate=true;
+                if (this.active_lyrics.has(i)) {
+                    this.active_lyrics.get(i).userData.sunflower_idx = -1; // not using
+                    this.active_lyrics.delete(i);
+                }
+                x -= shiftX * this.area_size;
+                z -= shiftZ * this.area_size;
+                this.temp.position.set(x, 0, z);
+                const rot = (Math.random()-0.5)*Math.PI*0.25+Math.PI;
+                this.temp.rotation.set(0, rot, 0);
+                this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
+                this.temp.updateMatrix();
+                this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
+                needUpdate=true;
+            }
+
+            if (this.active_lyrics.has(i)) {
+                if (Math.abs(2-y)>0.01) {
+                    let newY = THREE.MathUtils.damp(y, 2, 10.0, deltaTime);
+                    let dy = (newY-y);
+                    y = newY;
+                    this.temp.position.set(x, newY, z);
+                    
+                    this.temp.rotation.setFromRotationMatrix(this.temp.matrix);
+                    this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
+
+                    this.temp.updateMatrix();
+                    
+                    this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
+
+                    if (this.active_lyrics.has(i)) {
+                        this.active_lyrics.get(i).position.y += dy; // move lyric up
+                    }
+
+                    needUpdate = true;
+                }
             }
         }
 
