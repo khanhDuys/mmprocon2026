@@ -1,6 +1,7 @@
 import * as THREE from 'three';
+import { spritesheetUV } from 'three/tsl';
 export class LyricManager { // for drawing lyrics on html canvases
-    constructor(scene, max_lyric = 20) {
+    constructor(scene, max_lyric = 100) {
         this.scene = scene;
         this.max_lyric = max_lyric;
         this.pool = [];
@@ -29,6 +30,7 @@ export class LyricManager { // for drawing lyrics on html canvases
             });
             const sprite = new THREE.Sprite(material);
             sprite.userData.sunflower_idx = -1;
+            sprite.userData.end_time = -1;
             sprite.scale.set(6, 3, 1);
             sprite.position.set(0, -9999, 0);
             this.scene.add(sprite);
@@ -50,6 +52,7 @@ export class LyricManager { // for drawing lyrics on html canvases
         return {
             sprite: this.selected.sprite,
             pool_id: this.selected.pool_id,
+            end_time: word.endTime,
             duration: word.duration,
             isNewWord: isNewWord
         };
