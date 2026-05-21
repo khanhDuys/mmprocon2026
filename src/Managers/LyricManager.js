@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { spritesheetUV } from 'three/tsl';
 export class LyricManager { // for drawing lyrics on html canvases
-    constructor(scene, max_lyric = 100) {
+    constructor(scene, max_lyric = 50) {
         this.scene = scene;
         this.max_lyric = max_lyric;
         this.pool = [];
@@ -15,7 +15,7 @@ export class LyricManager { // for drawing lyrics on html canvases
     init() {
         for (let i = 0; i<this.max_lyric; i++) {
             const canvas = document.createElement('canvas'); // new canvas for drawing lyrics
-            canvas.width = 512;
+            canvas.width = 256;
             canvas.height = 256;
             const ctx = canvas.getContext('2d');
             const texture = new THREE.CanvasTexture(canvas);
@@ -31,7 +31,7 @@ export class LyricManager { // for drawing lyrics on html canvases
             const sprite = new THREE.Sprite(material);
             sprite.userData.sunflower_idx = -1;
             sprite.userData.end_time = -1;
-            sprite.scale.set(6, 3, 1);
+            sprite.scale.set(3, 3, 1);
             sprite.position.set(0, -9999, 0);
             this.scene.add(sprite);
 
@@ -41,6 +41,10 @@ export class LyricManager { // for drawing lyrics on html canvases
     updateAndGetLyrics(word, cur_char) {
         let isNewWord = false;
         if (this.cur_word_ref != word){ // check if new word
+            if (this.selected && this.cur_word_ref) {
+                this.drawWord(this.selected, this.cur_word_ref, this.cur_word_ref.lastChar);
+            } // draws fully yellow if frame skipped
+
             this.cur_word_ref = word;
             this.selected = this.pool[this.pool_idx];
             this.pool_idx = (this.pool_idx+1)%this.max_lyric; // increment by one and cycle back if > max_lyric
@@ -65,7 +69,6 @@ export class LyricManager { // for drawing lyrics on html canvases
         //ctx.textAlign = 'left';
         ctx.lineWidth = 0;
         ctx.strokeStyle = '#000000';
-        ctx.font = `bold 140px "Mona12", sans-serif`;
 
         const chars = [];
         let c = word.firstChar;
@@ -75,21 +78,24 @@ export class LyricManager { // for drawing lyrics on html canvases
             c  = c.next;
         }
 
-        let total_width = 0;
-        const charWidths = chars.map(char => {
-            const w = ctx.measureText(char.text).width;
-            total_width += w;
-            return w;
-        });
+        let fontSize = 140;
+        ctx.font = `bold ${fontSize}px "Mona12", sans-serif`;
+        let total_width = chars.reduce((sum, ch) => sum + ctx.measureText(ch.text).width, 0);
+        if (total_width > canvas.width * 0.95) {
+            fontSize = Math.floor(fontSize * (canvas.width * 0.95) / total_width);
+            ctx.font = `bold ${fontSize}px "Mona12", sans-serif`;
+        }
 
+        const charWidths = chars.map(ch => ctx.measureText(ch.text).width);
+        total_width = charWidths.reduce((a, b) => a + b, 0);
         let startX = (canvas.width - total_width) / 2;
         const centerY = canvas.height / 2;
-        ctx.textAlign = 'left'; 
+        ctx.textAlign = 'left';
 
         let isSung = true; 
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
-            ctx.fillStyle = isSung ? '#FFD700' : '#FFFFFF'; 
+            ctx.fillStyle = isSung ? '#c3ff00' : '#FFFFFF'; 
             ctx.strokeText(char.text, startX, centerY);
             ctx.fillText(char.text, startX, centerY);
             startX += charWidths[i]; 

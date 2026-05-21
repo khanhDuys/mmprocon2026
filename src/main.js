@@ -4,8 +4,11 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import * as THREE from 'three';
 import { SceneSetup } from './Core/SceneSetup.js';
+
 import { Sunflowers } from './World/Sunflowers.js';
 import { Ground } from './World/Ground.js';
+import { Sky } from './World/Sky.js';
+
 import { TextAliveManager } from './Managers/TextAliveManager.js'
 import { LyricManager } from './Managers/LyricManager.js'
 
@@ -33,7 +36,7 @@ const params = {
   duration_weight: 0.01,
   offset_flower: 2,
   area_size: 160,
-  max_dist: 60
+  max_dist: 100,
 };
 
 gui.add(params, 'dot_camera', 0.0, 1.0, 0.01);
@@ -42,6 +45,7 @@ gui.add(params, 'duration_weight', 0.0, 0.05, 0.001);
 gui.add(params, 'offset_flower', 0.0, 2.0, 0.01);
 gui.add(params, 'area_size', 1, 200, 1);
 gui.add(params, 'max_dist', 1, 160, 1);
+
 
 document.body.addEventListener('click', () => {
     if (!controls.isLocked) {
@@ -56,6 +60,10 @@ core.scene.add(ambient_light);
 //core.scene.add(spot_light);
 const sunflower_field = new Sunflowers(core.scene, core.camera, 6000, params);
 const ground = new Ground(core.scene);
+const sky = new Sky(core.scene, params);
+
+gui.add(sky.uniforms.uSharpness, 'value', 0.0, 1.0, 0.01).name('sharpness');
+gui.add(sky.uniforms.uExponent, 'value', 0., 50.0, 0.01).name('exponent');
 
 const timer = new THREE.Timer();
 
@@ -82,6 +90,8 @@ function animate(timestamp) {
   //spot_light.position.y += 3;
   core.camera.position.z += 5*deltaTime;
   ground.update(core.camera);
+  sky.update(core.camera);
+  core.scene.fog.color.copy(sky.uniforms.uBottomColor.value); // copy fog color
   //fpsDiv.innerText = `FPS: ${Math.round(1/deltaTime)}`; // formula for calculating fps is 1/deltatime (deltatime is in seconds)
   //if (timestamp>last_update+500) { // average of 500ms
   //  //console.log((timestamp-last_update));

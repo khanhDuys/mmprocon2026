@@ -1,7 +1,5 @@
 import * as THREE from 'three';
-import { GLTFLoader, ThreeMFLoader } from 'three/examples/jsm/Addons.js';
-import { texture, thickness } from 'three/tsl';
-import { SpriteMaterial } from 'three/webgpu';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 export class Sunflowers {
     constructor(scene, camera, count, params) {
         this.scene = scene;
@@ -36,7 +34,7 @@ export class Sunflowers {
             let flower_geo = null;
             let flower_mat = null;
         
-        
+            
             gltf.scene.traverse((child) =>   { // loop through children
             if (child.isMesh&&!flower_geo) { // if is flower mesh
                 flower_mat = child.material;
@@ -45,6 +43,9 @@ export class Sunflowers {
                 flower_mat.side = THREE.DoubleSide;
                 flower_mat.alphaTest = 0.5;
                 flower_mat.depthWrite = true; // force three.js to calc depth
+                flower_mat.onBeforeCompile = (shader) => {
+                    
+                }
               }
             })
             this.instance_sunflower = new THREE.InstancedMesh(flower_geo, flower_mat, this.flower_count);
@@ -115,8 +116,8 @@ export class Sunflowers {
             // move sprites
             this.instance_sunflower.getMatrixAt(target_id, this.temp_matrix);
             sprite.position.setFromMatrixPosition(this.temp_matrix);
-            sprite.position.y+=5;
-            sprite.position.z-=1;
+            sprite.position.y+=5.25;
+            sprite.position.z-=0.8;
         }
     }
     update(camera, deltaTime, songPos) {

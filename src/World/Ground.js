@@ -23,8 +23,7 @@ export class Ground {
           shader.vertexShader = shader.vertexShader.replace(
             '#include <uv_vertex>',
             `#include <uv_vertex>
-            vec4 worldPos = modelMatrix * vec4(position, 1.0);
-            vMapUv = worldPos.xz * 0.2; // scale to adjust tiling
+            vMapUv = (modelMatrix * vec4(position, 1.0)).xz * 0.2; // scale to adjust tiling
             `
           );
         };
