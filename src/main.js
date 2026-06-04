@@ -64,6 +64,8 @@ const sky = new Sky(core.scene, params);
 
 gui.add(sky.uniforms.uSharpness, 'value', 0.0, 1.0, 0.01).name('sharpness');
 gui.add(sky.uniforms.uExponent, 'value', 0., 50.0, 0.01).name('exponent');
+gui.add(sky.uniforms.uCloudScale,     'value', 1, 10, 0.1).name('cloud scale');
+gui.add(sky.uniforms.uCloudThreshold, 'value', 0, 1,  0.01).name('cloud density');
 
 const timer = new THREE.Timer();
 
@@ -90,7 +92,7 @@ function animate(timestamp) {
   //spot_light.position.y += 3;
   core.camera.position.z += 5*deltaTime;
   ground.update(core.camera);
-  sky.update(core.camera);
+  sky.update(core.camera, deltaTime);
   core.scene.fog.color.copy(sky.uniforms.uBottomColor.value); // copy fog color
   //fpsDiv.innerText = `FPS: ${Math.round(1/deltaTime)}`; // formula for calculating fps is 1/deltatime (deltatime is in seconds)
   //if (timestamp>last_update+500) { // average of 500ms

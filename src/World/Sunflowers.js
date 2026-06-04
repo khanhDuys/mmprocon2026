@@ -14,13 +14,13 @@ export class Sunflowers {
         this.active_lyrics = new Map();
 
         // pre-allocated math for no garbage collection
-        this.temp_matrix = new THREE.Matrix4();
-        this.temp_position = new THREE.Vector3();
-        this.to_sunflower = new THREE.Vector3();
-        this.camera_direction = new THREE.Vector3(); 
-        this.offset_pos = new THREE.Vector3();
-        this.blocker = new THREE.Vector3();
-        this.to_blocker = new THREE.Vector3();
+            this.temp_matrix = new THREE.Matrix4();
+            this.temp_position = new THREE.Vector3();
+            this.to_sunflower = new THREE.Vector3();
+            this.camera_direction = new THREE.Vector3(); 
+            this.offset_pos = new THREE.Vector3();
+            this.blocker = new THREE.Vector3();
+            this.to_blocker = new THREE.Vector3();
 
         //parameters
         this.params = params;

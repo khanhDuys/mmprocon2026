@@ -15,21 +15,21 @@ export class TextAliveManager {
         this.player.addListener({
             onAppReady: (app) => {
                 if (!app.managed) {
-                    // アフター・ザ・カーテン / Rulmry 
-                    //this.player.createFromSongUrl("https://piapro.jp/t/zoqO/20251214200738", {
-                    //  video: {
-                    //    // 音楽地図訂正履歴
-                    //    beatId: 4827294,
-                    //    chordId: 2963755,
-                    //    repetitiveSegmentId: 3086262,
-//
-                    //    // 歌詞URL: https://piapro.jp/t/EVO2
-                    //    // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FzoqO%2F20251214200738
-                    //    lyricId: 126591,
-                    //    lyricDiffId: 28627
-                    //  },
-                    //});
-                    this.player.createFromSongUrl("https://staff.aist.go.jp/m.goto/RWC-MDB/MP3/RWC-MDB-P-2001.No.087.mp3");
+                     //アフター・ザ・カーテン / Rulmry 
+                    this.player.createFromSongUrl("https://piapro.jp/t/zoqO/20251214200738", {
+                      video: {
+                        // 音楽地図訂正履歴
+                        beatId: 4827294,
+                        chordId: 2963755,
+                        repetitiveSegmentId: 3086262,
+
+                        // 歌詞URL: https://piapro.jp/t/EVO2
+                        // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FzoqO%2F20251214200738
+                        lyricId: 126591,
+                        lyricDiffId: 28627
+                      },
+                    });
+                    //this.player.createFromSongUrl("https://staff.aist.go.jp/m.goto/RWC-MDB/MP3/RWC-MDB-P-2001.No.087.mp3");
                 }
             },
             onTimerReady: () => {

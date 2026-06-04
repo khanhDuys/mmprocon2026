@@ -11,7 +11,11 @@ export class Sky {
             uExponent: { value: 4.5 },
             uSharpness: { value: 0.2 },
             uTopColor: { value: new THREE.Color(0x7ac7eb) },
-            uBottomColor: { value: new THREE.Color(0xb5ffff) }
+            uBottomColor: { value: new THREE.Color(0xb5ffff) },
+            uTime:           { value: 0 },
+            uCloudScale:     { value: 3.0 },
+            uCloudThreshold: { value: 0.5 },
+            uCloudColor:     { value: new THREE.Color(0xffffff) }
         }
         this.sky = null;
         this.scene = scene;
@@ -28,7 +32,8 @@ export class Sky {
         this.sky = new THREE.Mesh(geo, mat);
         this.scene.add(this.sky);
     }
-    update(camera) {
+    update(camera, deltaTime) {
         this.sky.position.copy(camera.position);
+        this.uniforms.uTime.value += deltaTime;
     }
 }
