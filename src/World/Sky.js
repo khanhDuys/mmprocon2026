@@ -12,10 +12,15 @@ export class Sky {
             uSharpness: { value: 0.2 },
             uTopColor: { value: new THREE.Color(0x7ac7eb) },
             uBottomColor: { value: new THREE.Color(0xb5ffff) },
-            uTime:           { value: 0 },
-            uCloudScale:     { value: 3.0 },
-            uCloudThreshold: { value: 0.5 },
-            uCloudColor:     { value: new THREE.Color(0xffffff) }
+            uTime: { value: 0 },
+            uCloudScale: { value: 3.0 },
+            uCloudThreshold: { value: 0.48 },
+            uCloudSmoothness: { value: 0.15}, 
+            uCloudColor: { value: new THREE.Color(0xffffff) },
+            uSunSize: { value: 0.001 },
+            uSunGlow: { value: 0.5 },
+            uSunDirection: { value: new THREE.Vector3(0.0, 0.2, 1.0) },
+            uSunColor: { value: new THREE.Color(0xffffff)} 
         }
         this.sky = null;
         this.scene = scene;

@@ -10,3 +10,7 @@
     pointer-events: none;
 
 }
+
+div:has(audio){
+    display: none !important;
+}

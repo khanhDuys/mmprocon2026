@@ -35,7 +35,7 @@ const params = {
   dot_sunflower: 0.95,
   duration_weight: 0.01,
   offset_flower: 2,
-  area_size: 160,
+  area_size: 210,
   max_dist: 100,
 };
 
@@ -58,7 +58,7 @@ core.scene.add(ambient_light);
 //const spot_light = new THREE.SpotLight(0xffffff, 2);
 //spot_light.castShadow = true;
 //core.scene.add(spot_light);
-const sunflower_field = new Sunflowers(core.scene, core.camera, 6000, params);
+const sunflower_field = new Sunflowers(core.scene, core.camera, 6300, params);
 const ground = new Ground(core.scene);
 const sky = new Sky(core.scene, params);
 
@@ -66,6 +66,10 @@ gui.add(sky.uniforms.uSharpness, 'value', 0.0, 1.0, 0.01).name('sharpness');
 gui.add(sky.uniforms.uExponent, 'value', 0., 50.0, 0.01).name('exponent');
 gui.add(sky.uniforms.uCloudScale,     'value', 1, 10, 0.1).name('cloud scale');
 gui.add(sky.uniforms.uCloudThreshold, 'value', 0, 1,  0.01).name('cloud density');
+gui.add(sky.uniforms.uCloudSmoothness, 'value', 0, 1,  0.01).name('cloud smoothness');
+gui.add(sky.uniforms.uSunGlow, 'value', 0, 1,  0.01).name('sun glow');
+gui.add(sky.uniforms.uSunSize, 'value', 0, 1,  0.01).name('sun size');
+
 
 const timer = new THREE.Timer();
 
