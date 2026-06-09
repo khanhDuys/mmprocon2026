@@ -14,13 +14,18 @@ export class Sky {
             uBottomColor: { value: new THREE.Color(0xb5ffff) },
             uTime: { value: 0 },
             uCloudScale: { value: 3.0 },
-            uCloudThreshold: { value: 0.48 },
-            uCloudSmoothness: { value: 0.15}, 
+            uCloudThreshold: { value: 0.3 },
+            uCloudSmoothness: { value: 0.8}, 
             uCloudColor: { value: new THREE.Color(0xffffff) },
             uSunSize: { value: 0.001 },
             uSunGlow: { value: 0.5 },
             uSunDirection: { value: new THREE.Vector3(0.0, 0.2, 1.0) },
-            uSunColor: { value: new THREE.Color(0xffffff)} 
+            uSunColor: { value: new THREE.Color(0xfffdf5) },
+            uBarHeight: { value : 0.2 },
+            uBarCount: { value : 75.0 },
+            uBarThickness: { value: 0.4 },
+            uBarColor: { value: new THREE.Color(0xffffff) },
+            uSinceLastBeat: { value: 10000.0 }
         }
         this.sky = null;
         this.scene = scene;
@@ -40,5 +45,6 @@ export class Sky {
     update(camera, deltaTime) {
         this.sky.position.copy(camera.position);
         this.uniforms.uTime.value += deltaTime;
+        this.uniforms.uSinceLastBeat.value += deltaTime;
     }
 }

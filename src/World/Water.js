@@ -5,4 +5,7 @@ export class Water {
         this.scene = scene;
         this.init();
     }
+    init() {
+        
+    }
 }

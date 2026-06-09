@@ -1,5 +1,8 @@
 export class RhythmManager {
-    constructor() {
-
+    constructor(TextAlive_Manager) {
+        this.init();
+    }
+    init() {
+        
     }
 }

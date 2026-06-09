@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { spritesheetUV } from 'three/tsl';
 export class LyricManager { // for drawing lyrics on html canvases
-    constructor(scene, max_lyric = 50) {
+    constructor(scene, max_lyric = 100) {
         this.scene = scene;
         this.max_lyric = max_lyric;
         this.pool = [];

@@ -68,6 +68,7 @@ export class Sunflowers {
         if (!this.instance_sunflower) return -1;
         let min = Infinity;
         let best = -1;
+        let second_best = -1;
         this.offset_pos.copy(this.camera.position);
         this.offset_pos.z+=offset; // temporary until i removex straight line
         this.camera.getWorldDirection(this.camera_direction);
@@ -84,7 +85,7 @@ export class Sunflowers {
             
             this.to_sunflower.subVectors(this.temp_position, this.camera.position).normalize(); // set distance vector (camera to sunflower) to sun_flower and normalize
             if (this.camera_direction.dot(this.to_sunflower)<this.params.dot_camera) continue; // change to skip sunflowers that arent in the camera's direction
-            
+            second_best = i;
 
             let flag = false;
             for (const [idx, sprite] of this.active_lyrics) {
@@ -99,7 +100,8 @@ export class Sunflowers {
 
             if (min > dist) {min = dist; best = i;}
         }
-        return best;
+        if (best) return best;
+        console.log("cannot find");
     }
     placeLyric(lyric_data) {
         const { sprite, pool_id, end_time, duration, isNewWord } = lyric_data;
