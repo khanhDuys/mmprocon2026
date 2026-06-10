@@ -41,6 +41,7 @@ export class Sunflowers {
                 flower_geo = child.geometry;
                 flower_geo.computeBoundingSphere();
                 flower_mat.side = THREE.DoubleSide;
+                flower_mat.map.colorSpace = THREE.SRGBColorSpace;
                 flower_mat.alphaTest = 0.5;
                 flower_mat.depthWrite = true; // force three.js to calc depth
                 flower_mat.onBeforeCompile = (shader) => {

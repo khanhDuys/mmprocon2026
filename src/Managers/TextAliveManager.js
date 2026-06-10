@@ -46,14 +46,14 @@ export class TextAliveManager {
                 const newBeat = this.player.findBeat(pos);
                 if (newBeat && newBeat!=this.cur_beat) {
                     this.cur_beat=newBeat;
-                    //console.log("beat " + this.cur_beat.startTime + " " + this.cur_beat.endTime);
+                    //console.log("beat");
                     if (this.onBeatUpdate) {
                         this.onBeatUpdate();
                     }
                 }
                 if (newChar && newChar!=this.cur_char) {
                     this.cur_char=newChar;
-                    console.log(this.cur_joined_word);
+                    //console.log(this.cur_joined_word);
                     if (!this.cur_joined_word || this.cur_char.startTime >= this.cur_joined_word.endTime) {
                         this.joinLyrics(this.cur_char.parent, this.cur_beat);
                     }
@@ -73,24 +73,21 @@ export class TextAliveManager {
         let start_word = iWord;
         let end_word = iWord;
         let end_time = iWord.endTime;
-        let duration_threshold = (iBeat.duration);
         let new_duration = iWord.duration;
         let joined = iWord.text;
         iWord = iWord.next;
+        const punctuation = ["!", ",", ".", "?", ";", "！", "、", "。", "？", "；"];
+
         while (iWord) {
-            let flag = false; // breaks out of loop if flag false
+            if (iWord.startTime - start_word.startTime >= iBeat.duration) break;
+
+            let flag = false;
             
             // Rule: append to current if it's a particle
-            if (iWord.pos === "P" || iWord.pos === "R") flag = true;
+            if (["P", "R", "X"].includes(iWord.pos)) flag = true;
 
             // Rule: append to current if it's punctuation (! , . ? ; and it's japanese variant)
-            if (iWord.text === "!" ||
-                iWord.text === "," || 
-                iWord.text === "." ||
-                iWord.text === "?" ||
-                iWord.text === ";" ||
-                iWord.text === "！" ||
-                iWord.text === "、") flag = true;
+            if (punctuation.includes(iWord.text)) flag = true;
 
 
             if (!flag) break;
@@ -109,5 +106,12 @@ export class TextAliveManager {
             firstChar: start_word.firstChar,
             lastChar: end_word.lastChar
         };
+    }
+    getBeatDuration() {
+        return this.cur_beat.duration;
+    }
+    getBPM() {
+        if (!this.cur_beat || !this.cur_beat.duration) return 0;
+        return Math.round(60000 / this.cur_beat.duration);
     }
 }

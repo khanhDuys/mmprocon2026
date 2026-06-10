@@ -14,6 +14,7 @@ export class SceneSetup {
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.outputColorSpace = THREE.SRGBColorSpace;
         //this.renderer.shadowMap.enabled = true;
         document.body.appendChild(this.renderer.domElement);
 

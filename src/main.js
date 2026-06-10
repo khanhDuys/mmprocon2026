@@ -39,6 +39,7 @@ const params = {
   offset_flower: 2,
   area_size: 210,
   max_dist: 50,
+  cam_speed: 7,
 };
 
 gui.add(params, 'dot_camera', 0.0, 1.0, 0.01);
@@ -47,6 +48,7 @@ gui.add(params, 'duration_weight', 0.0, 0.05, 0.001);
 gui.add(params, 'offset_flower', 0.0, 2.0, 0.01);
 gui.add(params, 'area_size', 1, 200, 1);
 gui.add(params, 'max_dist', 1, 160, 1);
+gui.add(params, 'cam_speed', 0, 20, 0.01);
 
 
 document.body.addEventListener('click', () => {
@@ -74,6 +76,9 @@ gui.add(sky.uniforms.uSunSize, 'value', 0, 1,  0.01).name('sun size');
 gui.add(sky.uniforms.uBarHeight, 'value', 0, 1,  0.01).name('bar height');
 gui.add(sky.uniforms.uBarCount, 'value', 0, 100,  1.0).name('bar count');
 gui.add(sky.uniforms.uBarThickness, 'value', 0, 1.0,  0.01).name('bar thickness');
+gui.add(sky.uniforms.uBarRevolutions, 'value', 0, 40.0,  1.0).name('bar revolutions');
+gui.add(sky.uniforms.uBarSpeed, 'value', 0, 5.0,  0.01).name('bar revolution speed');
+gui.add(sky.uniforms.uRevolutionWeight, 'value', 0, 1.0,  0.01).name('bar revolution weight');
 
 
 const timer = new THREE.Timer();
@@ -85,7 +90,9 @@ audio.onLyricUpdate = (word, cur_char) => {
 
 audio.onBeatUpdate = () => {
   sky.uniforms.uSinceLastBeat.value = 0.0;
-  //console.log("beat");
+  sky.uniforms.uCurBPM.value = audio.getBPM();
+  sky.uniforms.uBeatDuration.value = audio.getBeatDuration() * 0.001;
+  console.log("beat");
 }
 
 let last_update = 0; // for fps calculation
@@ -104,7 +111,7 @@ function animate(timestamp) {
   //spot_light.position.set = core.camera.position;
   //spot_light.position.z += 1;
   //spot_light.position.y += 3;
-  core.camera.position.z += 5*deltaTime;
+  core.camera.position.z += params.cam_speed*deltaTime;
   ground.update(core.camera);
   sky.update(core.camera, deltaTime);
   core.scene.fog.color.copy(sky.uniforms.uBottomColor.value); // copy fog color
