@@ -111,16 +111,19 @@ export class Sunflowers {
             const target_id = this.getNearestSunflower(this.params.duration_weight*duration+this.params.offset_flower);
             if (target_id === -1) return;
 
-            if ((sprite.userData.sunflower_idx != 1) && (this.active_lyrics.has(sprite.userData.sunflower_idx))) {
+            if ((sprite.userData.sunflower_idx != -1) && (this.active_lyrics.has(sprite.userData.sunflower_idx))) {
                 this.active_lyrics.delete(sunflower_idx);
             }
+
+            sprite.userData.sunflower_idx = target_id;
+            sprite.userData.end_time = end_time;
                         
             this.active_lyrics.set(target_id, sprite);
             // move sprites
             this.instance_sunflower.getMatrixAt(target_id, this.temp_matrix);
             sprite.position.setFromMatrixPosition(this.temp_matrix);
             sprite.position.y+=5.25;
-            sprite.position.z-=0.8;
+            //sprite.position.z-=0.8;
         }
     }
     update(camera, deltaTime, songPos) {
@@ -131,15 +134,15 @@ export class Sunflowers {
             this.instance_sunflower.getMatrixAt(i, this.temp.matrix);
             this.instance_position.setFromMatrixPosition(this.temp.matrix);
             let { x, y, z } = this.instance_position;
-            let dx = x-camera.position.x;
-            let dz = z-camera.position.z;
+            const dx = x-camera.position.x;
+            const dz = z-camera.position.z;
             let shiftX = Math.round(dx / this.params.area_size); // if distance is >   half of area size
             let shiftZ = Math.round(dz / this.params.area_size);      
 
             if (shiftX !== 0 || shiftZ !== 0){
                 if (this.active_lyrics.has(i)) {
                     this.active_lyrics.get(i).userData.sunflower_idx = -1; // not using
-                    this.active_lyrics.get(i).userData.end_time = - 1;
+                    this.active_lyrics.get(i).userData.end_time = -1;
                     this.active_lyrics.delete(i);
                 }
                 x -= shiftX * this.params.area_size;
@@ -152,30 +155,29 @@ export class Sunflowers {
                 this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
                 needUpdate=true;
             }
+            if (!this.active_lyrics.has(i)) continue;
+            const sprite = this.active_lyrics.get(i);
+            const expired = sprite.userData.end_time !== -1 && sprite.userData.end_time < songPos;
+            const targetY = expired ? 0 : 2.5;
+            const speed = expired ? 7.0 : 10.0;
+            if (Math.abs(targetY-y)>0.01) {
+                let newY = THREE.MathUtils.damp(y, targetY, speed, deltaTime);
+                sprite.position.y += (newY-y); // move lyric up
 
-            if (this.active_lyrics.has(i)) {
-                if (Math.abs(2-y)>0.01) {
-                    let newY = THREE.MathUtils.damp(y, 2, 10.0, deltaTime);
-                    let dy = (newY-y);
-                    y = newY;
-                    this.temp.position.set(x, newY, z);
-                    
-                    this.temp.rotation.setFromRotationMatrix(this.temp.matrix);
-                    this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
-
-                    this.temp.updateMatrix();
-                    
-                    this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
-
-                    if (this.active_lyrics.has(i)) {
-                        this.active_lyrics.get(i).position.y += dy; // move lyric up
-                    }
-
-                    needUpdate = true;
-                }
-                if (this.active_lyrics.get(i).userData.end_time < songPos) {
-                    
-                }
+                const angle = Math.atan2(-dx, -dz);
+                this.temp.rotation.set(0, angle, 0);
+                this.temp.position.set(x, newY, z);
+                this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
+                this.temp.updateMatrix();
+                sprite.position.x = this.temp.position.x+Math.sin(angle) * 1.5;
+                sprite.position.z = this.temp.position.z+Math.cos(angle) * 1.5;
+                this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
+                needUpdate = true;
+            }
+            if (expired && y <= 0.02) {
+                sprite.userData.sunflower_idx = -1;
+                sprite.userData.end_time = -1;
+                this.active_lyrics.delete(i);
             }
         }
 

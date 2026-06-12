@@ -67,8 +67,9 @@ export class LyricManager { // for drawing lyrics on html canvases
 
         ctx.textBaseline = 'middle';
         //ctx.textAlign = 'left';
-        ctx.lineWidth = 0;
-        ctx.strokeStyle = '#000000';
+        //ctx.shadowBlur = 15;                        
+        //ctx.shadowOffsetX = 0;                      
+        //ctx.shadowOffsetY = 0;     
 
         const chars = [];
         let c = word.firstChar;
@@ -95,7 +96,8 @@ export class LyricManager { // for drawing lyrics on html canvases
         let isSung = true; 
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
-            ctx.fillStyle = isSung ? '#c3ff00' : '#FFFFFF'; 
+            ctx.fillStyle = isSung ? '#00e5ff' : '#FFFFFF'; 
+            //ctx.shadowColor = isSung ? '#00e5ff' : '#FFFFFF'; 
             ctx.strokeText(char.text, startX, centerY);
             ctx.fillText(char.text, startX, centerY);
             startX += charWidths[i]; 

@@ -30,7 +30,8 @@ export class Sky {
             uBarColor: { value: new THREE.Color(0xffffff) },
             uSinceLastBeat: { value: 10000.0 },
             uBeatDuration: { value: 0.0 },
-            uCurBPM: { value: 0.0 }
+            uCurBPM: { value: 0.0 },
+            uBPMCount: { value : 0.0 }
         }
         this.sky = null;
         this.scene = scene;
@@ -47,9 +48,11 @@ export class Sky {
         this.sky = new THREE.Mesh(geo, mat);
         this.scene.add(this.sky);
     }
-    update(camera, deltaTime) {
+    update(camera, deltaTime, BPM) {
         this.sky.position.copy(camera.position);
         this.uniforms.uTime.value += deltaTime;
+        this.uniforms.uBPMCount.value += BPM;
+        console.log(this.uniforms.uBPMCount.value);
         this.uniforms.uSinceLastBeat.value += deltaTime;
         //console.log(this.uniforms.uSinceLastBeat.value + this.uniforms.uBeatDuration.value);
     }

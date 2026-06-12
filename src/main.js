@@ -106,14 +106,14 @@ function animate(timestamp) {
   frame_count++;
   stats.update(); 
 
-  sunflower_field.update(core.camera, deltaTime);
+  sunflower_field.update(core.camera, deltaTime, audio.player.timer.position);
   
   //spot_light.position.set = core.camera.position;
   //spot_light.position.z += 1;
   //spot_light.position.y += 3;
   core.camera.position.z += params.cam_speed*deltaTime;
   ground.update(core.camera);
-  sky.update(core.camera, deltaTime);
+  sky.update(core.camera, deltaTime, audio.getBPM());
   core.scene.fog.color.copy(sky.uniforms.uBottomColor.value); // copy fog color
   //fpsDiv.innerText = `FPS: ${Math.round(1/deltaTime)}`; // formula for calculating fps is 1/deltatime (deltatime is in seconds)
   //if (timestamp>last_update+500) { // average of 500ms

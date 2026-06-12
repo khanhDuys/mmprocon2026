@@ -10,6 +10,7 @@ uniform float uTime;
 uniform float uSinceLastBeat;
 uniform float uBeatDuration;
 uniform float uCurBPM;
+uniform float uBPMCount;
 
 uniform float uBarHeight;
 uniform float uBarCount;
@@ -75,7 +76,8 @@ void main() {
     
     float rise = pow(smoothstep(0.9, 1.0, beatProgress), 4.0);
     
-    float beatHeight = max(decay, rise) * uBarHeight;    float beatLimit = step( 1.0-uBarHeight-beatHeight-sin(barAngleGrad*PI*2.*uBarRevolutions-uTime*(uBarSpeed+uCurBPM*0.01))*uRevolutionWeight , beatLevel);
+    float beatHeight = max(decay, rise) * uBarHeight;    
+    float beatLimit = step( 1.0-uBarHeight-beatHeight-sin(barAngleGrad*PI*2.*uBarRevolutions-uTime*uBarSpeed-uBPMCount*0.001)*uRevolutionWeight , beatLevel);
     float beatBar = barShape*beatLimit*0.25; // combine
     float sunPos = dot(dir, normalize(uSunDirection));
     //color = vec3(sunPos);
