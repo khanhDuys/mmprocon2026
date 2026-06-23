@@ -12,6 +12,8 @@ export class Sky {
             uSharpness: { value: 0.2 },
             uTopColor: { value: new THREE.Color(0x7ac7eb) },
             uBottomColor: { value: new THREE.Color(0xb5ffff) },
+            uHorizonColor: { value: new THREE.Color(0xff7e4d) },
+            uSunsetColor: { value: new THREE.Color(0xff9b3d) },
             uTime: { value: 0 },
             uCloudScale: { value: 3.0 },
             uCloudThreshold: { value: 0.2 },

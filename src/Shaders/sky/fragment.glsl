@@ -33,7 +33,14 @@ uniform vec3 uSunColor;
 #define PI 3.141592
 #define EPS 0.0001
 
-#define PIXEL_SIZE = 4.
+#define PIXEL_SIZE 4.
+
+const int bayer[16] = int[16](
+    0, 12, 3, 15, 
+    8, 4, 11, 7, 
+    2, 14, 1, 13, 
+    10, 6, 9, 5
+);
 
 // fbm functions
 

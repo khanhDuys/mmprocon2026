@@ -35,19 +35,19 @@ export class TextAliveManager {
                     //});
 
                     // アフター・ザ・カーテン / Rulmry
-                    this.player.createFromSongUrl("https://piapro.jp/t/zoqO/20251214200738", {
-                      video: {
-                        // 音楽地図訂正履歴
-                        beatId: 4827294,
-                        chordId: 2963755,
-                        repetitiveSegmentId: 3086262,
-                    
-                        // 歌詞URL: https://piapro.jp/t/EVO2
-                        // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FzoqO%2F20251214200738
-                        lyricId: 126591,
-                        lyricDiffId: 28627
-                      },
-                    });
+                    //this.player.createFromSongUrl("https://piapro.jp/t/zoqO/20251214200738", {
+                    //  video: {
+                    //    // 音楽地図訂正履歴
+                    //    beatId: 4827294, 
+                    //    chordId: 2963755,
+                    //    repetitiveSegmentId: 3086262,
+                    //
+                    //    // 歌詞URL: https://piapro.jp/t/EVO2
+                    //    // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FzoqO%2F20251214200738
+                    //    lyricId: 126591,
+                    //    lyricDiffId: 28627
+                    //  },
+                    //});
 
                     // シャッターチャンス / 夜未アガリ
                     // this.player.createFromSongUrl("https://piapro.jp/t/PNpQ/20251209170719", {
@@ -95,19 +95,19 @@ export class TextAliveManager {
                     // });
 
                     // TAKEOVER / Twinfield
-                    //this.player.createFromSongUrl("https://piapro.jp/t/E2i3/20251215092113", {
-                    //    video: {
-                    //        // 音楽地図訂正履歴
-                    //        beatId: 4827298,
-                    //        chordId: 2963759,
-                    //        repetitiveSegmentId: 3086266,
-                    //        
-                    //        // 歌詞URL: https://piapro.jp/t/zxWP
-                    //        // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FE2i3%2F20251215092113
-                    //        lyricId: 126533,
-                    //        lyricDiffId: 28631
-                    //    },
-                    //});
+                    this.player.createFromSongUrl("https://piapro.jp/t/E2i3/20251215092113", {
+                        video: {
+                            // 音楽地図訂正履歴
+                            beatId: 4827298,
+                            chordId: 2963759,
+                            repetitiveSegmentId: 3086266,
+                            
+                            // 歌詞URL: https://piapro.jp/t/zxWP
+                            // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FE2i3%2F20251215092113
+                            lyricId: 126533,
+                            lyricDiffId: 28631
+                        },
+                    });
 
                     //this.player.createFromSongUrl("https://staff.aist.go.jp/m.goto/RWC-MDB/MP3/RWC-MDB-P-2001.No.087.mp3");
                 }

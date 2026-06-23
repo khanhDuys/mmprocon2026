@@ -15,23 +15,21 @@ export class LyricManager { // for drawing lyrics on html canvases
     init() {
         for (let i = 0; i<this.max_lyric; i++) {
             const canvas = document.createElement('canvas'); // new canvas for drawing lyrics
-            canvas.width = 256;
-            canvas.height = 256;
+            canvas.width = 512;
+            canvas.height = 512;
             const ctx = canvas.getContext('2d');
             const texture = new THREE.CanvasTexture(canvas);
             texture.minFilter = THREE.NearestFilter;
             texture.magFilter = THREE.NearestFilter;
             const material= new THREE.SpriteMaterial({
                 map: texture, 
-                transparent: true, 
-                alphaTest: 0.5,
-                polygonOffset: true,
-                polygonOffsetFactor: -10
+                transparent: true,
+                alphaTest: 0.9
             });
             const sprite = new THREE.Sprite(material);
             sprite.userData.sunflower_idx = -1;
             sprite.userData.end_time = -1;
-            sprite.scale.set(3, 3, 1);
+            sprite.scale.set(4, 4, 1);
             sprite.position.set(0, -9999, 0);
             this.scene.add(sprite);
 
@@ -43,7 +41,7 @@ export class LyricManager { // for drawing lyrics on html canvases
         if (this.cur_word_ref != word){ // check if new word
             if (this.selected && this.cur_word_ref) {
                 this.drawWord(this.selected, this.cur_word_ref, this.cur_word_ref.lastChar);
-            } // draws fully yellow if frame skipped
+            } // draws fully colored if frame skipped
 
             this.cur_word_ref = word;
             this.selected = this.pool[this.pool_idx];
@@ -93,11 +91,14 @@ export class LyricManager { // for drawing lyrics on html canvases
         const centerY = canvas.height / 2;
         ctx.textAlign = 'left';
 
+
         let isSung = true; 
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
             ctx.fillStyle = isSung ? '#00e5ff' : '#FFFFFF'; 
-            //ctx.shadowColor = isSung ? '#00e5ff' : '#FFFFFF'; 
+            ctx.strokeStyle = isSung ? '#081163' : '#000000'; 
+            ctx.lineWidth = fontSize*0.1;
+            //ctx.shadowColor = isSung ? '#00e5ff' : '#FFFFFF';
             ctx.strokeText(char.text, startX, centerY);
             ctx.fillText(char.text, startX, centerY);
             startX += charWidths[i]; 

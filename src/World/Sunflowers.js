@@ -160,25 +160,29 @@ export class Sunflowers {
             const expired = sprite.userData.end_time !== -1 && sprite.userData.end_time < songPos;
             const targetY = expired ? 0 : 2.5;
             const speed = expired ? 7.0 : 10.0;
-            if (Math.abs(targetY-y)>0.01) {
-                let newY = THREE.MathUtils.damp(y, targetY, speed, deltaTime);
-                sprite.position.y += (newY-y); // move lyric up
 
-                const angle = Math.atan2(-dx, -dz);
-                this.temp.rotation.set(0, angle, 0);
-                this.temp.position.set(x, newY, z);
-                this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
-                this.temp.updateMatrix();
-                sprite.position.x = this.temp.position.x+Math.sin(angle) * 1.5;
-                sprite.position.z = this.temp.position.z+Math.cos(angle) * 1.5;
-                this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
-                needUpdate = true;
-            }
+            let newY = THREE.MathUtils.damp(y, targetY, speed, deltaTime);
+            sprite.position.y += (newY-y); // move lyric u  
+            const angle = Math.atan2(-dx, -dz);
+            this.temp.position.set(x, newY, z);
+            this.temp.scale.set(this.instance_scale, this.instance_scale, this.instance_scale);
+
+
+
+
             if (expired && y <= 0.02) {
                 sprite.userData.sunflower_idx = -1;
                 sprite.userData.end_time = -1;
                 this.active_lyrics.delete(i);
+            } else {
+                const angle = Math.atan2(-dx, -dz);
+                this.temp.rotation.set(0, angle, 0);
+                sprite.position.x = this.temp.position.x+Math.sin(angle) * 1.5;
+                sprite.position.z = this.temp.position.z+Math.cos(angle) * 1.5;
             }
+            this.temp.updateMatrix();
+            this.instance_sunflower.setMatrixAt(i, this.temp.matrix);
+            needUpdate = true;
         }
 
         if (needUpdate) { // update in one step for micro optimization
