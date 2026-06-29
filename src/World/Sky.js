@@ -13,16 +13,18 @@ export class Sky {
             uTopColor: { value: new THREE.Color(0x7ac7eb) },
             uBottomColor: { value: new THREE.Color(0xb5ffff) },
             uHorizonColor: { value: new THREE.Color(0xff7e4d) },
-            uSunsetColor: { value: new THREE.Color(0xff9b3d) },
+            uSunsetColor: { value: new THREE.Color(0x99220b) },
             uTime: { value: 0 },
-            uCloudScale: { value: 3.0 },
-            uCloudThreshold: { value: 0.2 },
-            uCloudSmoothness: { value: 0.5}, 
+            uCloudScale: { value: 1.5 },
+            uCloudThreshold: { value: 0.03 },
+            uCloudSmoothness: { value: 0.35}, 
             uCloudColor: { value: new THREE.Color(0xffffff) },
+            uDarkCloudColor: { value: new THREE.Color(0x6a3773) },
             uSunSize: { value: 0.001 },
             uSunGlow: { value: 0.5 },
-            uSunDirection: { value: new THREE.Vector3(0.0, 0.2, 1.0) },
+            uSunDirection: { value: new THREE.Vector3(0.0, 0.01, 1.0) },
             uSunColor: { value: new THREE.Color(0xfffdf5) },
+            uSunSunsetColor: { value: new THREE.Color(0xffefba) },
             uBarHeight: { value : 0.08 },
             uBarCount: { value : 75.0 },
             uBarThickness: { value: 0.6 },
@@ -33,10 +35,16 @@ export class Sky {
             uSinceLastBeat: { value: 10000.0 },
             uBeatDuration: { value: 0.0 },
             uCurBPM: { value: 0.0 },
-            uBPMCount: { value : 0.0 }
+            uBPMCount: { value : 0.0 },
+            // dithering / pixelation
+            uPixelSize: { value: 3.0 },
+            uCloudDitherScale: { value: 40.0 },
+            uDitherBands: { value: 10.5 },
+            uDitherOffset: { value: new THREE.Vector2(1.0, 0.0) }
         }
         this.sky = null;
         this.scene = scene;
+        this.daySpeed = 0.05; // radians/sec
         this.init();
     }
     init() {
@@ -50,12 +58,15 @@ export class Sky {
         this.sky = new THREE.Mesh(geo, mat);
         this.scene.add(this.sky);
     }
-    update(camera, deltaTime, BPM) {
+    update(camera, deltaTime, BPM, ratio) {
         this.sky.position.copy(camera.position);
-        this.uniforms.uTime.value += deltaTime;
+        this.uniforms.uTime.value += deltaTime; 
         this.uniforms.uBPMCount.value += BPM;
-        console.log(this.uniforms.uBPMCount.value);
+        //console.log(this.uniforms.uBPMCount.value);
         this.uniforms.uSinceLastBeat.value += deltaTime;
+        const sunAngle = 0.4-0.4*ratio;
+        console.log(ratio);
+        this.uniforms.uSunDirection.value.set(0.0, Math.sin(sunAngle), Math.cos(sunAngle));
         //console.log(this.uniforms.uSinceLastBeat.value + this.uniforms.uBeatDuration.value);
     }
 }

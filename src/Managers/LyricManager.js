@@ -24,9 +24,12 @@ export class LyricManager { // for drawing lyrics on html canvases
             const material= new THREE.SpriteMaterial({
                 map: texture, 
                 transparent: true,
-                alphaTest: 0.9
+                alphaTest: 0.9,
+                depthTest: false,
+                depthWrite: false
             });
             const sprite = new THREE.Sprite(material);
+            sprite.renderOrder = 1000;
             sprite.userData.sunflower_idx = -1;
             sprite.userData.end_time = -1;
             sprite.scale.set(4, 4, 1);
@@ -92,7 +95,7 @@ export class LyricManager { // for drawing lyrics on html canvases
         ctx.textAlign = 'left';
 
 
-        let isSung = true; 
+        let isSung = !!cur_char; 
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
             ctx.fillStyle = isSung ? '#00e5ff' : '#FFFFFF'; 

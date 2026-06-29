@@ -12,7 +12,7 @@ mat_name = input("enter name of mat ")
 bay_mat = np.array(bayer(level+1))
 bay_mat = bay_mat.T # loop will make the print flipped
 cnt = 0
-print(f"const int {mat_name}[{(2**(level+1))**2}] = int[{level}](")
+print(f"const int {mat_name}[{(2**(level+1))**2}] = int[{2**(level+1)**2}](")
 for i in bay_mat:
     for j in i:
         print(f"{j},", end=" ")

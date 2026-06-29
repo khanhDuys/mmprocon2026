@@ -5,7 +5,7 @@ export class SceneSetup {
     constructor() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color('lightblue');
-        this.scene.fog = new THREE.Fog('lightblue', 50, 60);
+        this.scene.fog = new THREE.Fog('lightblue', 1000, 6000);
 
 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -15,6 +15,8 @@ export class SceneSetup {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+        this.renderer.shadowMap.enabled = true;
+this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         //this.renderer.shadowMap.enabled = true;
         document.body.appendChild(this.renderer.domElement);
 
