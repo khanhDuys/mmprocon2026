@@ -15,7 +15,7 @@ to run the dev server:
 npm run dev
 ```
 
-#Development stuff
+# Development stuff
 Well, this is my first submission to the magical mirai programming contests, I would say that I haven't done enough as I wanted to (partly because my mentor just out-of-the-blue gave us an assignment that makes us read and analyze 20 research papers in 4 days, yikes) Mostly because I kinda took on all of the work myself instead of finding someone to collab with.
 All of the code and art is done by me, the art is done in Blender aswell as Aseprite.
 The font used is Mona12, a font that's open source and free and you really can do anything with it (except for reselling), and is under OFL-1.1 license.
@@ -32,7 +32,7 @@ else if (iWord.startTime - start_word.startTime >= iBeat.duration) break; // els
 ```
 The words are joined via punctuation (except for & because that's pronounced 'and'), and if it's a particle, adverb, or other. Those are joined so that the word division isn't weird(?) and enough time for the sunflowers to catch up.
 
-#About the sky
+# About the sky
 The sky is coded by me, since three.js default sky is far too realistic and not stylized. I can't go over throughly since I still have that assignment to do (rip) 
 The clouds uses an Fractal Brownian Motion to generate the noise patterns for it.
 The beat bars are coded as follow:
@@ -56,7 +56,7 @@ Although, the clouds are dithered a way that makes the dithering texture parelle
     vec2 cloudCell = floor(uv * uCloudDitherScale);
     cloudColor = doubleDither(cloudColor, cloudCell, uDitherBands);
 ```
-#About the miku model
+# About the miku model
 This is by-far the most time taking element that I have made for this project (And maybe the first model of the magical mirai 2026 Miku itself)
 Though I really time crunched at the end, so that's why the uvs are a bit unorthodox.
 The model is fully rigged (Forward-kinematics though), and fully modeled (except for some ribbons that wouldn't be really needed)
